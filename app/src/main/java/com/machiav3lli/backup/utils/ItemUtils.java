@@ -32,8 +32,9 @@ import com.machiav3lli.backup.schedules.db.Schedule;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import com.machiav3lli.backup.items.AppInfoV2;
 
-public class ItemUtils {
+public final class ItemUtils {
     private static final String TAG = Constants.classTag(".ItemUtils");
 
     public static long calculateID(AppInfo app) {
@@ -62,12 +63,16 @@ public class ItemUtils {
         return dateFormat.format(date);
     }
 
-    public static void pickTypeColor(AppInfo app, AppCompatTextView text) {
+    public static long calculateID(AppInfoV2 app) {
+        return app.getPackageName().hashCode();
+    }
+
+    public static void pickTypeColor(AppInfoV2 app, AppCompatTextView text) {
         int color;
         if (app.isInstalled()) {
-            if (app.isSpecial()) {
+            if (app.getAppInfo().isSpecial()) {
                 color = Color.rgb(155, 69, 214);
-            } else if (app.isSystem()) {
+            } else if (app.getAppInfo().isSystem()) {
                 color = Color.rgb(69, 147, 254);
             } else {
                 color = Color.rgb(244, 155, 69);
@@ -75,16 +80,18 @@ public class ItemUtils {
             if (app.isDisabled()) {
                 color = Color.DKGRAY;
             }
-        } else color = Color.GRAY;
+        } else {
+            color = Color.GRAY;
+        }
         text.setTextColor(color);
     }
 
-    public static void pickAppType(AppInfo app, Chip chip) {
+    public static void pickAppType(AppInfoV2 app, Chip chip) {
         ColorStateList color;
-        if (app.isSpecial()) {
+        if (app.getAppInfo().isSpecial()) {
             chip.setText(R.string.tag_special);
             color = ColorStateList.valueOf(Color.rgb(155, 69, 214));
-        } else if (app.isSystem()) {
+        } else if (app.getAppInfo().isSystem()) {
             chip.setText(R.string.tag_system);
             color = ColorStateList.valueOf(Color.rgb(69, 147, 254));
         } else {
