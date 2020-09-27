@@ -26,7 +26,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.google.android.material.chip.Chip;
 import com.machiav3lli.backup.Constants;
 import com.machiav3lli.backup.R;
-import com.machiav3lli.backup.items.AppInfo;
+import com.machiav3lli.backup.handler.action.BaseAppAction;
 import com.machiav3lli.backup.schedules.db.Schedule;
 
 import java.text.DateFormat;
@@ -36,15 +36,6 @@ import com.machiav3lli.backup.items.AppInfoV2;
 
 public final class ItemUtils {
     private static final String TAG = Constants.classTag(".ItemUtils");
-
-    public static long calculateID(AppInfo app) {
-        return app.getPackageName().hashCode()
-                + app.getBackupMode()
-                + (app.isDisabled() ? 0 : 1)
-                + (app.isInstalled() ? 1 : 0)
-                + (app.getLogInfo() != null ? app.getLogInfo().getLastBackupMillis() : 0)
-                + app.getCacheSize();
-    }
 
     public static long calculateScheduleID(Schedule sched) {
         return sched.getId()
@@ -111,17 +102,17 @@ public final class ItemUtils {
     public static void pickBackupMode(int backupMode, Chip chip) {
         ColorStateList color;
         switch (backupMode) {
-            case AppInfo.MODE_APK:
+            case BaseAppAction.MODE_APK:
                 chip.setVisibility(View.VISIBLE);
                 chip.setText(R.string.tag_apk);
                 color = ColorStateList.valueOf(Color.rgb(69, 244, 155));
                 break;
-            case AppInfo.MODE_DATA:
+            case BaseAppAction.MODE_DATA:
                 chip.setVisibility(View.VISIBLE);
                 chip.setText(R.string.tag_data);
                 color = ColorStateList.valueOf(Color.rgb(225, 94, 216));
                 break;
-            case AppInfo.MODE_BOTH:
+            case BaseAppAction.MODE_BOTH:
                 chip.setVisibility(View.VISIBLE);
                 chip.setText(R.string.tag_apk_and_data);
                 color = ColorStateList.valueOf(Color.rgb(255, 76, 87));
