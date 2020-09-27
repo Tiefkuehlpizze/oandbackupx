@@ -76,8 +76,8 @@ public class BackupAppAction extends BaseAppAction {
         BackupBuilder backupBuilder = new BackupBuilder(this.getContext(), app.getAppInfo(), appBackupRootUri);
         StorageFile backupDir = backupBuilder.getBackupPath();
 
-        Log.d(BackupAppAction.TAG, "Killing package to avoid file changes during backup");
-        this.killPackage(app.getPackageName());
+        Log.d(BackupAppAction.TAG, "preparing package to avoid file inconsistencies during backup");
+        this.prePackage(app.getPackageName());
         BackupProperties backupProperties;
         try {
             if ((backupMode & BaseAppAction.MODE_APK) == BaseAppAction.MODE_APK) {
@@ -113,6 +113,9 @@ public class BackupAppAction extends BaseAppAction {
                     String.format("%s: %s", e.getClass().getSimpleName(), e.getMessage()),
                     false
             );
+        } finally {
+            Log.d(BackupAppAction.TAG, "set package back to normal operation");
+            this.postPackage(app.getPackageName());
         }
         Log.i(BackupAppAction.TAG, String.format("%s: Backup done: %s", app, backupProperties));
         return new ActionResult(app, backupProperties, "", true);

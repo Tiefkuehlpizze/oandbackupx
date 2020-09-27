@@ -67,7 +67,7 @@ public class RestoreAppAction extends BaseAppAction {
     public ActionResult run(AppInfoV2 app, BackupProperties backupProperties, Uri backupLocation, int backupMode) {
         Log.i(RestoreAppAction.TAG, String.format("Restoring up: %s [%s]", app.getPackageName(), app.getAppInfo().getPackageLabel()));
         try {
-            this.killPackage(app.getPackageName());
+            this.prePackage(app.getPackageName());
             if ((backupMode & BaseAppAction.MODE_APK) == BaseAppAction.MODE_APK) {
                 this.restorePackage(backupLocation, backupProperties);
                 app.refreshFromPackageManager(this.getContext());
@@ -82,6 +82,8 @@ public class RestoreAppAction extends BaseAppAction {
                     String.format("%s: %s", e.getClass().getSimpleName(), e.getMessage()),
                     false
             );
+        } finally {
+            this.postPackage(app.getPackageName());
         }
         Log.i(RestoreAppAction.TAG, String.format("%s: Backup done: %s", app, backupProperties));
         return new ActionResult(app, backupProperties, "", true);
