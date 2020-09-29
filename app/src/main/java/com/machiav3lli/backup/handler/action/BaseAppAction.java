@@ -94,7 +94,7 @@ public abstract class BaseAppAction {
                 return;
             }
             /**/
-            ShellHandler.runAsRoot(String.format("am force-stop %s", packageName));
+            ShellHandler.runAsRoot(String.format("am force-stop --user all %s", packageName));
             //ShellHandler.runAsRoot(String.format("pm suspend --user %d %s", applicationInfo.uid, packageName)); // looks like it does not work, wrong permissions
             //ShellHandler.runAsRoot(String.format("pm suspend %s", packageName)); // when used alone, kind of disables the app
             //ShellHandler.runAsRoot(String.format("pm suspend %s ; pm unsuspend %s", packageName, packageName)); // hopefully stops the app but keeps it available
