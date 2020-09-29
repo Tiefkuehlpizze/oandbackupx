@@ -88,18 +88,18 @@ public abstract class BaseAppAction {
         try {
             ApplicationInfo applicationInfo = this.context.getPackageManager().getApplicationInfo(packageName, 0);
             Log.i(BaseAppAction.TAG, String.format("package %s uid %d", packageName, applicationInfo.uid));
-            /**/
+            /**
             if (applicationInfo.uid == 1000) {
                 Log.w(BaseAppAction.TAG, "Requested to kill processes of UID 1000. Refusing to kill system's processes!");
                 return;
             }
             /**/
+            ShellHandler.runAsRoot(String.format("am force-stop %s", packageName));
             //ShellHandler.runAsRoot(String.format("pm suspend --user %d %s", applicationInfo.uid, packageName)); // looks like it does not work, wrong permissions
             //ShellHandler.runAsRoot(String.format("pm suspend %s", packageName)); // when used alone, kind of disables the app
             //ShellHandler.runAsRoot(String.format("pm suspend %s ; pm unsuspend %s", packageName, packageName)); // hopefully stops the app but keeps it available
             //ShellHandler.runAsRoot(String.format("ps -o PID -u %d | grep -v PID | xargs kill -TERM", applicationInfo.uid)); // may be too low level and too hard (unless it's mapped by Android on the app lifecycle)
             //ShellHandler.runAsRoot(String.format("ps -o PID -u %d | grep -v PID | xargs kill -STOP", applicationInfo.uid)); // hold your breath (hoepfully files don't change afterwards)
-            ShellHandler.runAsRoot(String.format("echo pre")); // fake to make compile happy
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(BaseAppAction.TAG, packageName + " does not exist. Cannot preprocess!");
         } catch (ShellHandler.ShellCommandFailedException e) {
@@ -111,7 +111,7 @@ public abstract class BaseAppAction {
     public void postPackage(String packageName) {
         try {
             ApplicationInfo applicationInfo = this.context.getPackageManager().getApplicationInfo(packageName, 0);
-            /**/
+            /**
             if (applicationInfo.uid == 1000) {
                 Log.w(BaseAppAction.TAG, "Requested to kill processes of UID 1000. Refusing to kill system's processes!");
                 return;
@@ -120,11 +120,10 @@ public abstract class BaseAppAction {
             //ShellHandler.runAsRoot(String.format("pm unsuspend --user %d %s", applicationInfo.uid, packageName)); // looks like it does not work, wrong permissions
             //ShellHandler.runAsRoot(String.format("pm unsuspend %s", packageName)); // better done directly after suspend (before backup), when STOP is also used
             //ShellHandler.runAsRoot(String.format("ps -o PID -u %d | grep -v PID | xargs kill -CONT")); // continue everything that was stopped
-            ShellHandler.runAsRoot(String.format("echo post")); // fake to make compile happy
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(BaseAppAction.TAG, packageName + " does not exist. Cannot postprocess!");
-        } catch (ShellHandler.ShellCommandFailedException e) {
-            e.printStackTrace();
+        //} catch (ShellHandler.ShellCommandFailedException e) {
+        //    e.printStackTrace();
         }
     }
 }
